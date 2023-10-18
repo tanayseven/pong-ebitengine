@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image/color"
 )
 
@@ -39,7 +39,7 @@ func (b *Ball) Update(g GameState) {
 }
 
 func (b *Ball) Draw(screen *ebiten.Image) {
-	ebitenutil.DrawRect(screen, float64(b.x), float64(b.y), float64(ballSize), float64(ballSize), color.White)
+	vector.DrawFilledRect(screen, float32(b.x), float32(b.y), float32(ballSize), float32(ballSize), color.White, true)
 }
 
 func (b *Ball) ScoredLeft() bool {
