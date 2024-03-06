@@ -4,6 +4,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image/color"
+	"math/rand"
 )
 
 type Ball struct {
@@ -14,23 +15,32 @@ type Ball struct {
 	deltaY int
 }
 
-const ballSpeed = 4
+const ballSpeedMax = 5
+const ballSpeedMin = 3
+
+func randInRange(min, max int) int {
+	number := rand.Intn(max-min) + min
+	for number < ballSpeedMin && number > -ballSpeedMin {
+		number = rand.Intn(max-min) + min
+	}
+	return number
+}
 
 var (
 	ball = Ball{
-		speed:  4,
+		speed:  ballSpeedMax,
 		x:      screenWidth / 2,
 		y:      screenHeight / 2,
-		deltaX: ballSpeed,
-		deltaY: ballSpeed,
+		deltaX: randInRange(-ballSpeedMax, ballSpeedMax),
+		deltaY: randInRange(-ballSpeedMax, ballSpeedMax),
 	}
 )
 
 func (b *Ball) reset() {
 	b.x = screenWidth / 2
 	b.y = screenHeight / 2
-	b.deltaX = ballSpeed
-	b.deltaY = ballSpeed
+	b.deltaX = randInRange(-ballSpeedMax, ballSpeedMax)
+	b.deltaY = randInRange(-ballSpeedMax, ballSpeedMax)
 }
 
 func (b *Ball) Update(g GameState) {
