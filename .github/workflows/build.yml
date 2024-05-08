@@ -10,8 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-
-  build:
+  build-linux:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -31,9 +30,61 @@ jobs:
 
     - name: Build
       run: ./build-all.sh
-      
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.3.3
+
+    - name: Upload linux build artifact
+      id: upload_linux_amd64_artifacts
+      uses: actions/upload-artifact@v4
       with:
-        name: pong-linux
-        path: pong/build/
+        name: build-linux-amd64
+        path: ./build/pong-linux-amd64
+
+    - name: Upload web build artifact
+      id: upload_web_artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-web-wasm
+        path: ./build/pong-web-wasm.zip
+
+  release:
+    needs: [build-linux]
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Delete old release
+        id: delete_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh auth status
+          gh release delete latest || true
+
+      - name: Download pong-linux-amd64 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-linux-amd64
+          path: ./build/
+          merge-multiple: true
+
+      - name: Download pong-web-wasm artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-web-wasm
+          path: ./build/
+          merge-multiple: true
+
+      - name: Show all downloaded artifacts
+        run: ls -R
+
+      - name: Create new release
+        id: create_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh auth status
+          gh release create latest --title "Pong - latest" --notes "Find the latest release of pong that matches your platform"
+          gh release upload latest ./build/pong-linux-amd64
+          gh release upload latest ./build/pong-web-wasm.zip
+          gh release view latest
+          gh release edit latest --draft=false

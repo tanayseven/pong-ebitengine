@@ -11,7 +11,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   echo "Building for Web"
   cp "$GOROOT"/misc/wasm/wasm_exec.js public/
   env GOOS=js GOARCH=wasm go build -o public/pong.wasm
-  zip build/pong-web-go.zip public/*
+  zip build/pong-web-wasm.zip public/*
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
 
