@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+if [[ "$OSTYPE" == "win32" ]]; then
 
   echo "Building for Windows"
-  env GOOS=windows GOARCH=amd64 go build -o build/pong-windows-amd64.exe .
+  env GOOS=windows GOARCH=amd64 go build -o build/pong-windows.exe .
+
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+
+  echo "Building for Windows"
+  env GOOS=windows GOARCH=amd64 go build -o build/pong-windows.exe .
 
   echo "Building for Linux"
-  env GOOS=linux GOARCH=amd64 go build -o build/pong-linux-amd64 .
+  env GOOS=linux GOARCH=amd64 go build -o build/pong-linux .
 
   echo "Building for Web"
   cp "$GOROOT"/misc/wasm/wasm_exec.js public/
@@ -22,5 +27,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
   env GOOS=darwin GOARCH=arm64 go build -o build/pong-macos-apple-silicon .
 
 else
+
   echo "Unsupported OS"
+
 fi

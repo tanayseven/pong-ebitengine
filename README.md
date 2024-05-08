@@ -1,6 +1,13 @@
 Pong
 ====
 
+Download
+--------
+
+You can play the game by downloading the binary from the [releases](https://github.com/tanayseven/pong-ebitengine/releases) page.
+
+Or you can even visit my [itch.io](https://tanayseven.itch.io/pong-ebitengine) page to play the game in the browser.
+
 Running
 -------
 
