@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "$OSTYPE" == "win32" ]]; then
-
-  echo "Building for Windows"
-  env GOOS=windows GOARCH=amd64 go build -o build/pong-windows.exe .
-
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
   echo "Building for Windows"
   env GOOS=windows GOARCH=amd64 go build -o build/pong-windows.exe .
@@ -21,10 +16,10 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
 
   echo "Building for Mac Intel"
-  env GOOS=darwin GOARCH=amd64 go build -o build/pong-macos-intel .
+  env GOOS=darwin CGO_ENABLED=1 GOARCH=amd64 go build -o build/pong-macos-intel .
 
   echo "Building for Mac Apple Silicon"
-  env GOOS=darwin GOARCH=arm64 go build -o build/pong-macos-apple-silicon .
+  env GOOS=darwin CGO_ENABLED=1 GOARCH=arm64 go build -o build/pong-macos-apple-silicon .
 
 else
 
