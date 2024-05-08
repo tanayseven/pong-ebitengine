@@ -211,3 +211,23 @@ jobs:
           gh release upload latest ./build/pong-macos-apple-silicon
           gh release view latest
           gh release edit latest --draft=false
+
+      - name: Download Butler to release to Itch.io
+        run: |
+          curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip
+          chmod +x butler
+          ./butler -V
+
+      - name: Release to Itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          ITCHIO_USER: tanayseven
+          ITCHIO_GAME: pong-ebitengine
+        run: |
+          ./butler login
+          ./butler push ./build/pong-linux ${ITCHIO_USER}/${ITCHIO_GAME}:linux
+          ./butler push ./build/pong-web-wasm.zip ${ITCHIO_USER}/${ITCHIO_GAME}:html
+          ./butler push ./build/pong-windows.exe ${ITCHIO_USER}/${ITCHIO_GAME}:windows
+          ./butler push ./build/pong-macos-intel ${ITCHIO_USER}/${ITCHIO_GAME}:osx
+          ./butler push ./build/pong-macos-apple-silicon ${ITCHIO_USER}/${ITCHIO_GAME}:osx
