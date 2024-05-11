@@ -226,14 +226,14 @@ jobs:
           ITCHIO_GAME: pong-ebitengine
         run: |
           ./butler login
-          ./butler push ./build/pong-linux ${ITCHIO_USER}/${ITCHIO_GAME}:linux --if-changed
+          ./butler push ./build/pong-linux ${ITCHIO_USER}/${ITCHIO_GAME}:linux --if-changed --userversion=latest
           ./check-if-deployed.sh ${ITCHIO_USER}/${ITCHIO_GAME}:linux
           unzip ./build/pong-web-wasm.zip -d ./build/pong-web-wasm
-          ./butler push ./build/pong-web-wasm/public ${ITCHIO_USER}/${ITCHIO_GAME}:html --if-changed
+          ./butler push ./build/pong-web-wasm/public ${ITCHIO_USER}/${ITCHIO_GAME}:html --if-changed --userversion=latest
           ./check-if-deployed.sh ${ITCHIO_USER}/${ITCHIO_GAME}:html
-          ./butler push ./build/pong-windows.exe ${ITCHIO_USER}/${ITCHIO_GAME}:windows --if-changed
+          ./butler push ./build/pong-windows.exe ${ITCHIO_USER}/${ITCHIO_GAME}:windows --if-changed --userversion=latest
           ./check-if-deployed.sh ${ITCHIO_USER}/${ITCHIO_GAME}:windows
-          ./butler push ./build/pong-macos-intel ${ITCHIO_USER}/${ITCHIO_GAME}:osx --if-changed
+          ./butler push ./build/pong-macos-intel ${ITCHIO_USER}/${ITCHIO_GAME}:osx --if-changed --userversion=latest
           ./check-if-deployed.sh ${ITCHIO_USER}/${ITCHIO_GAME}:osx
-          ./butler push ./build/pong-macos-apple-silicon ${ITCHIO_USER}/${ITCHIO_GAME}:osx --if-changed
+          ./butler push ./build/pong-macos-apple-silicon ${ITCHIO_USER}/${ITCHIO_GAME}:osx --if-changed --userversion=latest
           ./check-if-deployed.sh ${ITCHIO_USER}/${ITCHIO_GAME}:osx
