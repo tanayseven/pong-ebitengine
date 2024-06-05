@@ -6,7 +6,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font"
 	"image/color"
-	"os"
 )
 
 type MenuState string
@@ -35,7 +34,7 @@ func (m *Menu) Update() error {
 		} else if m.selection == GameInstructions {
 			gameState = InstructionsScreen
 		} else if m.selection == GameExit {
-			os.Exit(0)
+			gameState = ClosingScreen
 		}
 	}
 	return nil

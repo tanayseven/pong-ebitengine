@@ -5,6 +5,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"image/color"
+	"os"
+	"time"
 )
 
 const (
@@ -25,6 +27,7 @@ const (
 	Running            GameState = "running"
 	Paused             GameState = "paused"
 	Over               GameState = "over"
+	ClosingScreen      GameState = "blank"
 )
 
 var gameState = MenuScreen
@@ -122,10 +125,21 @@ func (g *Game) Update() error {
 		currentDisplayedMessage = player2WonMessage
 	}
 
+	if gameState == ClosingScreen {
+		currentDisplayedMessage = ""
+		time.Sleep(200 * time.Millisecond)
+		os.Exit(0)
+	}
+
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	if gameState == ClosingScreen {
+		screen.Fill(color.RGBA{0, 0, 0, 0xff})
+		return
+	}
+
 	if gameState == MenuScreen {
 		menu.Draw(screen)
 		return
