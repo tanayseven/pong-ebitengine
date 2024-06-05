@@ -3,10 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"golang.org/x/image/font"
-	"golang.org/x/image/font/opentype"
 	"image/color"
 )
 
@@ -23,13 +20,14 @@ const (
 type GameState string
 
 const (
-	New     GameState = "new"
-	Running GameState = "running"
-	Paused  GameState = "paused"
-	Over    GameState = "over"
+	MenuScreen         GameState = "menu"
+	InstructionsScreen GameState = "instructions"
+	Running            GameState = "running"
+	Paused             GameState = "paused"
+	Over               GameState = "over"
 )
 
-var gameState = New
+var gameState = MenuScreen
 
 type Game struct {
 }
@@ -44,12 +42,15 @@ type GameObjects interface {
 }
 
 func (g *Game) Update() error {
-	if gameState == New {
-		currentDisplayedMessage = gameStartMessage
-		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
-			gameState = Running
-			currentDisplayedMessage = ""
-		}
+	if gameState == MenuScreen {
+		menu.Update()
+		currentDisplayedMessage = ""
+		return nil
+	}
+
+	if gameState == InstructionsScreen {
+		instructions.Update()
+		currentDisplayedMessage = ""
 		return nil
 	}
 
@@ -64,7 +65,7 @@ func (g *Game) Update() error {
 
 	if gameState == Over {
 		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
-			gameState = New
+			gameState = MenuScreen
 			player1.score = 0
 			player2.score = 0
 			currentDisplayedMessage = gameStartMessage
@@ -125,14 +126,19 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	if gameState == MenuScreen {
+		menu.Draw(screen)
+		return
+	}
+
+	if gameState == InstructionsScreen {
+		instructions.Draw(screen)
+		return
+	}
+
 	screen.Fill(color.RGBA{0, 0, 0, 0xff})
 
-	tt, _ := opentype.Parse(fonts.MPlus1pRegular_ttf)
-	mplusNormalFont, _ := opentype.NewFace(tt, &opentype.FaceOptions{
-		Size:    36,
-		DPI:     72,
-		Hinting: font.HintingFull,
-	})
+	mplusNormalFont := LoadFont()
 	DrawCenteredText(screen, currentDisplayedMessage, screenWidth/2, screenHeight/2, mplusNormalFont, color.White)
 
 	player1.Draw(screen)
