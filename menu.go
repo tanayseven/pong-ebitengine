@@ -12,8 +12,8 @@ import (
 type MenuState string
 
 type Menu struct {
-	selection   MenuState
-	regularFont font.Face
+	selection MenuState
+	retroFont font.Face
 }
 
 const (
@@ -44,11 +44,12 @@ func (m *Menu) Update() error {
 func (m *Menu) Draw(screen *ebiten.Image) {
 	// draw menu items
 	screen.Fill(color.RGBA{0, 0, 0, 255})
-	selectColor := color.RGBA{255, 0, 0, 255}
+	defaultColor := color.RGBA{108, 122, 137, 255}
+	selectColor := color.RGBA{255, 255, 255, 255}
 
-	startColor := color.RGBA{255, 255, 255, 255}
-	instructionsColor := color.RGBA{255, 255, 255, 255}
-	quitColor := color.RGBA{255, 255, 255, 255}
+	startColor := defaultColor
+	instructionsColor := defaultColor
+	quitColor := defaultColor
 
 	switch m.selection {
 	case GameStart:
@@ -61,10 +62,24 @@ func (m *Menu) Draw(screen *ebiten.Image) {
 		quitColor = selectColor
 		break
 	}
+	x := 50
+	spacing := 40
 
-	text.Draw(screen, "Start Game", m.regularFont, 50, 30, startColor)
-	text.Draw(screen, "Instructions", m.regularFont, 50, 70, instructionsColor)
-	text.Draw(screen, "Quit", m.regularFont, 50, 110, quitColor)
+	texts := []struct {
+		Text  string
+		Color color.Color
+	}{
+		{"Start Pong", startColor},
+		{"Instructions", instructionsColor},
+		{"Quit", quitColor},
+	}
+
+	initialY := screenHeight/2 - len(texts)*spacing/2
+
+	for i, t := range texts {
+		y := initialY + i*spacing
+		text.Draw(screen, t.Text, m.retroFont, x, y, t.Color)
+	}
 }
 
 func (m *Menu) NextSelection() {
@@ -97,7 +112,7 @@ func (m *Menu) PrevSelection() {
 
 var (
 	menu = &Menu{
-		selection:   GameStart,
-		regularFont: LoadFont(),
+		selection: GameStart,
+		retroFont: LoadFont(),
 	}
 )

@@ -8,24 +8,40 @@ import (
 )
 
 type Instructions struct {
-	regularFont font.Face
+	retroFont font.Face
 }
 
-func (m *Instructions) Update() {
+func (i *Instructions) Update() {
 	if ebiten.IsKeyPressed(ebiten.KeyEscape) {
 		gameState = MenuScreen
 	}
 }
 
-func (m *Instructions) Draw(screen *ebiten.Image) {
+func (i *Instructions) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{0, 0, 0, 255})
-	text.Draw(screen, "Instructions", m.regularFont, 50, 30, color.White)
-	text.Draw(screen, "Player 1: W and S", m.regularFont, 50, 70, color.White)
-	text.Draw(screen, "Player 2: Up and Down", m.regularFont, 50, 110, color.White)
-	text.Draw(screen, "Pause: P", m.regularFont, 50, 150, color.White)
-	text.Draw(screen, "Back to menu from here: Esc", m.regularFont, 50, 200, color.White)
+	defaultColor := color.RGBA{108, 122, 137, 255}
+	x := 50
+	spacing := 40
+
+	texts := []struct {
+		Text  string
+		Color color.Color
+	}{
+		{"Instructions", defaultColor},
+		{"Player 1: [W] and [S]", defaultColor},
+		{"Player 2: [Up] and [Down]", defaultColor},
+		{"Pause: [P]", defaultColor},
+		{"Back to menu from here: [Esc]", defaultColor},
+	}
+
+	initialY := screenHeight/2 - len(texts)*spacing/2
+
+	for n, t := range texts {
+		y := initialY + n*spacing
+		text.Draw(screen, t.Text, i.retroFont, x, y, t.Color)
+	}
 }
 
 var instructions = &Instructions{
-	regularFont: LoadFont(),
+	retroFont: LoadFont(),
 }
