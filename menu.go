@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font"
 	"image/color"
 )
@@ -43,41 +42,41 @@ func (m *Menu) Update() error {
 func (m *Menu) Draw(screen *ebiten.Image) {
 	// draw menu items
 	screen.Fill(color.RGBA{0, 0, 0, 255})
-	defaultColor := color.RGBA{108, 122, 137, 255}
-	selectColor := color.RGBA{255, 255, 255, 255}
-
-	startColor := defaultColor
-	instructionsColor := defaultColor
-	quitColor := defaultColor
+	startSelected := false
+	instructionsSelected := false
+	quitSelected := false
 
 	switch m.selection {
 	case GameStart:
-		startColor = selectColor
+		startSelected = true
 		break
 	case GameInstructions:
-		instructionsColor = selectColor
+		instructionsSelected = true
 		break
 	case GameExit:
-		quitColor = selectColor
+		quitSelected = true
 		break
 	}
-	x := 50
 	spacing := 40
 
 	texts := []struct {
-		Text  string
-		Color color.Color
+		Text       string
+		IsSelected bool
 	}{
-		{"Start Pong", startColor},
-		{"Instructions", instructionsColor},
-		{"Quit", quitColor},
+		{"Start Pong", startSelected},
+		{"Instructions", instructionsSelected},
+		{"Quit", quitSelected},
 	}
 
 	initialY := screenHeight/2 - len(texts)*spacing/2
 
 	for i, t := range texts {
 		y := initialY + i*spacing
-		text.Draw(screen, t.Text, m.retroFont, x, y, t.Color)
+		glowColor := color.RGBA{0, 0, 0, 0}
+		if t.IsSelected {
+			glowColor = defaultColorGlow
+		}
+		DrawHorizontallyCenteredText(screen, t.Text, y, m.retroFont, menuColorMain, glowColor)
 	}
 }
 

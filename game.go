@@ -12,8 +12,8 @@ import (
 const (
 	screenWidth  = 640
 	screenHeight = 480
-	playerWidth  = 15
-	playerHeight = 100
+	playerWidth  = 10
+	playerHeight = 110
 	ballSize     = 15
 	playerSpeed  = 5
 	maxScore     = 10
@@ -153,15 +153,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{0, 0, 0, 0xff})
 
 	mplusNormalFont := LoadFont()
-	DrawCenteredText(screen, currentDisplayedMessage, screenWidth/2, screenHeight/2, mplusNormalFont, color.White)
+	DrawVerticallyHorizontallyCenteredText(screen, currentDisplayedMessage, mplusNormalFont, messageColourMain, defaultColorGlow)
 
 	player1.Draw(screen)
 	player2.Draw(screen)
 
-	// Draw ball
 	ball.Draw(screen)
 
 	// Draw scores
-	DrawCenteredText(screen, fmt.Sprintf("%d", player1.score), screenWidth/4, 60, mplusNormalFont, color.White)
-	DrawCenteredText(screen, fmt.Sprintf("%d", player2.score), screenWidth*3/4, 60, mplusNormalFont, color.White)
+	DrawLeftCenteredTopText(screen, fmt.Sprintf("%d", player1.score), mplusNormalFont, player1ColorMain, player1ColorGlow)
+	DrawRightCenteredTopText(screen, fmt.Sprintf("%d", player2.score), mplusNormalFont, player2ColorMain, player2ColorGlow)
 }

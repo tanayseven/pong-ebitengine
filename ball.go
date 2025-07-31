@@ -1,9 +1,10 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
-	"image/color"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"math/rand"
 )
 
@@ -48,8 +49,17 @@ func (b *Ball) Update(g GameState) {
 	b.y += b.deltaY
 }
 
+//go:embed assets/ball.png
+var ballImageRaw []byte
+
 func (b *Ball) Draw(screen *ebiten.Image) {
-	vector.DrawFilledRect(screen, float32(b.x), float32(b.y), float32(ballSize), float32(ballSize), color.White, true)
+	ballImage, _, _ := ebitenutil.NewImageFromReader(bytes.NewReader(ballImageRaw))
+	const offset = -20
+	if ballImage != nil {
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(float64(b.x+offset), float64(b.y+offset))
+		screen.DrawImage(ballImage, op)
+	}
 }
 
 func (b *Ball) ScoredLeft() bool {
